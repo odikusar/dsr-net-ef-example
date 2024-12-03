@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DotNetOlegApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ae0fd3420d1f015e944c57039c3e0ae05a89e9ab")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+51c5ccec697206ceb5d9c6345d9efcee1978db38")]
 [assembly: System.Reflection.AssemblyProductAttribute("DotNetOlegApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DotNetOlegApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -36,7 +36,7 @@ namespace MyApp.Controllers
         {
             var order = await _context.Orders
                 .Include(o => o.User)
-                .ThenInclude(u => u.Address)
+                .ThenInclude(u => u.Address)  //.Include(o => o.User.Address)
                 .FirstOrDefaultAsync(o => o.Id == id);
 
             if (order == null)
@@ -47,12 +47,47 @@ namespace MyApp.Controllers
             var result = new
             {
                 OrderId = order.Id,
-                UserFullName = order.User?.FirstName + " " + order.User?.LastName,
+                UserFullName = $"{order.User?.FirstName} {order.User?.LastName}",
                 ProductName = order.ProductName,
-                AddressName = order.User?.Address?.Name,
+                AddressName = order.User != null && order.User.Address != null ? order.User.Address.Name : null
             };
 
             return result;
+        }
+
+        // GET api/orders?role={roleName}
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<object>>> GetOrders([FromQuery] string? role)
+        {
+            IQueryable<Order> query = _context.Orders
+                .Include(o => o.User)
+                .ThenInclude(u => u!.UserRoles)
+                .Include(o => o.User)
+                .ThenInclude(u => u!.Address);
+
+            if (!string.IsNullOrEmpty(role))
+            {
+                query = query.Where(o => 
+                    o.User != null && o.User.UserRoles.Any(ur => ur.Role.Name.ToLower() == role.ToLower())
+                );
+            }
+
+            var orders = await query
+                .Select(order => new
+                {
+                    OrderId = order.Id,
+                    UserFullName = order.User != null ? $"{order.User.FirstName} {order.User.LastName}" : null,
+                    ProductName = order.ProductName,
+                    AddressName = order.User != null && order.User.Address != null ? order.User.Address.Name : null
+                })
+                .ToListAsync();
+
+            if (!orders.Any())
+            {
+                return NotFound();
+            }
+
+            return orders;
         }
     }
 }
